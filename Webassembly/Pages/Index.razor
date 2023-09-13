@@ -1,9 +1,128 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Dashboard</PageTitle>
+@using System.Net.Http.Json
+@using System.Text.Json.Serialization;
+@using Webassembly.Models;
+@using Webassembly.Services;
 
-<h1>Hello, github!</h1>
+@inject HttpClient httpClient
+@inject PartsService PartService
 
-Chaaaanged Permissions :)
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@*  StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges" *@
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+	<MudText Class="mb-5">Basic Crud operations with EF and Sqlite</MudText>
+
+	<MudText Typo="Typo.h3">Inventory</MudText>
+	<MudDataGrid T="Part" Virtualize="true" FixedHeader="true" Height="400px"
+				 Items="@Parts" ReadOnly="@_readOnly" EditMode="@(DataGridEditMode.Form)"
+				 Bordered="true" Dense="true" EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+
+		<Columns>
+			<PropertyColumn Property="x => x.Id" Title="Id" IsEditable="false" />
+			<PropertyColumn Property="x => x.Category" />
+			<PropertyColumn Property="x => x.Subcategory" />
+			<PropertyColumn Property="x => x.Name" />
+			<PropertyColumn Property="x => x.Stock" />
+			<PropertyColumn Property="x => x.PriceCents" />
+			
+
+			@* 				<EditTemplate>
+			<MudSelect @bind-Value="context.Item.Position" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+			<MudSelectItem Value="0">zero</MudSelectItem>
+			<MudSelectItem Value="1">one</MudSelectItem>
+			<MudSelectItem Value="17">seventeen</MudSelectItem>
+			</MudSelect>
+			</EditTemplate>
+			</PropertyColumn> *@
+
+			<PropertyColumn Property="x => x.Location" Title="Location" />
+
+
+			<TemplateColumn CellClass="d-flex justify-center" Title="Edit">
+				<CellTemplate>
+					<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
+					<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Satellite" Href="@context.Item.Url" />
+				</CellTemplate>
+			</TemplateColumn>
+
+
+
+
+
+		</Columns>
+	</MudDataGrid>
+
+	<MudExpansionPanels Style="flex:1">
+		<MudExpansionPanel Text="Show Events">
+			@foreach (var message in _events)
+			{
+				<MudText Typo="@Typo.body2">@message</MudText>
+			}
+			@if (_events.Count > 0)
+			{
+				<div class="d-flex">
+					<MudSpacer />
+					<MudButton Class="mt-3" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="@(() => _events.Clear())">Clear</MudButton>
+				</div>
+			}
+		</MudExpansionPanel>
+	</MudExpansionPanels>
+
+</MudContainer>
+
+@code {
+	private IEnumerable<Part> Parts = new List<Part>();
+	private bool _readOnly;
+	private bool _isCellEditMode;
+	private List<string> _events = new();
+	private bool _editTriggerRowClick;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Parts = await PartService.GetAllPartsAsync();
+	}
+
+	// events
+	void StartedEditingItem(Element item)
+	{
+		_events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+	}
+
+	void CanceledEditingItem(Element item)
+	{
+		_events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+	}
+
+	void CommittedItemChanges(Element item)
+	{
+		_events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+	}
+	public class Element
+	{
+		public string Group { get; set; }
+		public int Position { get; set; }
+		public string Name { get; set; }
+		public int Number { get; set; }
+
+		[JsonPropertyName("small")]
+		public string Sign { get; set; }
+		public double Molar { get; set; }
+		public IList<int> Electrons { get; set; }
+
+		/// <summary>
+		/// Overriding Equals is essential for use with Select and Table because they use HashSets internally
+		/// </summary>
+		public override bool Equals(object obj) => object.Equals(GetHashCode(), obj?.GetHashCode());
+
+		/// <summary>
+		/// Overriding GetHashCode is essential for use with Select and Table because they use HashSets internally
+		/// </summary>
+		public override int GetHashCode() => Name?.GetHashCode() ?? 0;
+
+		public override string ToString() => $"{Sign} - {Name}";
+	}
+}
+
