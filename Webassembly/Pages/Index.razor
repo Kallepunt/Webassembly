@@ -15,10 +15,13 @@
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
 	<MudText Class="mb-5">Basic Crud operations with EF and Sqlite</MudText>
 
+
+
 	<MudText Typo="Typo.h3">Inventory</MudText>
 	<MudDataGrid T="Part" Virtualize="true" FixedHeader="true" Height="400px"
 				 Items="@Parts" ReadOnly="@_readOnly" EditMode="@(DataGridEditMode.Form)"
-				 Bordered="true" Dense="true" EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+				 Bordered="true" Dense="true" EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)"
+				 StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges">
 
 		<Columns>
 			<PropertyColumn Property="x => x.Id" Title="Id" IsEditable="false" />
@@ -26,24 +29,14 @@
 			<PropertyColumn Property="x => x.Subcategory" />
 			<PropertyColumn Property="x => x.Name" />
 			<PropertyColumn Property="x => x.Stock" />
-			<PropertyColumn Property="x => x.PriceCents" />
-			
-
-			@* 				<EditTemplate>
-			<MudSelect @bind-Value="context.Item.Position" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
-			<MudSelectItem Value="0">zero</MudSelectItem>
-			<MudSelectItem Value="1">one</MudSelectItem>
-			<MudSelectItem Value="17">seventeen</MudSelectItem>
-			</MudSelect>
-			</EditTemplate>
-			</PropertyColumn> *@
-
+			<PropertyColumn Property="x => ReturnDollars(x.PriceCents)"  Title="Price"/>
 			<PropertyColumn Property="x => x.Location" Title="Location" />
 
 
-			<TemplateColumn CellClass="d-flex justify-center" Title="Edit">
+			<TemplateColumn CellClass="d-flex justify-center" Title="ToolBox">
 				<CellTemplate>
 					<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
+					<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => Delete(context.Item)" />
 					<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Satellite" Href="@context.Item.Url" />
 				</CellTemplate>
 			</TemplateColumn>
@@ -85,44 +78,36 @@
 		Parts = await PartService.GetAllPartsAsync();
 	}
 
-	// events
-	void StartedEditingItem(Element item)
+	private string ReturnDollars(long cents)
+	{
+
+		return String.Format("{0:C}", cents); ;
+
+	}
+
+
+	void StartedEditingItem(Part item)
 	{
 		_events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
 	}
 
-	void CanceledEditingItem(Element item)
+	void CanceledEditingItem(Part item)
 	{
 		_events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
 	}
 
-	void CommittedItemChanges(Element item)
+	async Task CommittedItemChanges(Part item)
 	{
 		_events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+		await PartService.EditPart(item);
 	}
-	public class Element
+
+	async Task Delete(Part item)
 	{
-		public string Group { get; set; }
-		public int Position { get; set; }
-		public string Name { get; set; }
-		public int Number { get; set; }
-
-		[JsonPropertyName("small")]
-		public string Sign { get; set; }
-		public double Molar { get; set; }
-		public IList<int> Electrons { get; set; }
-
-		/// <summary>
-		/// Overriding Equals is essential for use with Select and Table because they use HashSets internally
-		/// </summary>
-		public override bool Equals(object obj) => object.Equals(GetHashCode(), obj?.GetHashCode());
-
-		/// <summary>
-		/// Overriding GetHashCode is essential for use with Select and Table because they use HashSets internally
-		/// </summary>
-		public override int GetHashCode() => Name?.GetHashCode() ?? 0;
-
-		public override string ToString() => $"{Sign} - {Name}";
+		await PartService.DeletePart(item);
+		Parts = await PartService.GetAllPartsAsync();
+		_events.Insert(0, $"Event = Deleted, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
 	}
+
 }
 

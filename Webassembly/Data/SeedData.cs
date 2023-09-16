@@ -11,37 +11,24 @@ namespace Webassembly.Data
 {
 	public static class SeedData
 	{
-		
-
-	
 
 		public static async Task EnsureThatDataIsSeeded(IServiceProvider services)
 		{
 			var scopeFactory = services.GetRequiredService<IServiceScopeFactory>();
 			using var scope = scopeFactory.CreateScope();
 			var ctx = await scope.ServiceProvider.GetRequiredService<ISqliteWasmDbContextFactory<AppDbContext>>().CreateDbContextAsync();
-
-
-
 			Console.WriteLine(ctx.Parts.Count());
-
 			if (!ctx.Parts.Any())
 			{
 					await SeedTheData(ctx,services);
 
 			}
-				
-				
-
-			
 		}
 
 
 		public static async Task SeedTheData(AppDbContext db, IServiceProvider services)
 		{
 			Console.WriteLine("Seeding Data");
-
-
 			string Optionssource = "parts.csv";
 
 			var client = services.GetRequiredService<HttpClient>();
@@ -49,9 +36,6 @@ namespace Webassembly.Data
 			var st = await client.GetStreamAsync(Optionssource);
 
 			using var reader = new StreamReader(st);
-
-
-
 
 			using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 			var count = 0;
