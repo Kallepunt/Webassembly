@@ -77,12 +77,12 @@
       "System.Runtime.Serialization.Formatters.dll": "sha256-JhMbseDjUGTcMBTtYF5cBX2TCcUL4XACX1MkhFbe\/Ds=",
       "System.Security.Cryptography.dll": "sha256-xSeO7Cykhcojj1ghSL+i8JmQdY58YDlMjAcQQmAcrL8=",
       "System.Text.Encodings.Web.dll": "sha256-\/td3EXQ98PYOAzYWJncC42haEZtV+CCS1HNncXvO4O8=",
-      "System.Text.Json.dll": "sha256-qsHtQ8xuWLGIYYKi\/GjVapBIKLzHrXo\/73ZpC7BfVBM=",
+      "System.Text.Json.dll": "sha256-JOxbBcha3PdNHBIAjLc4tH+5mXcV5jwUdwE7dgJvCK8=",
       "System.Text.RegularExpressions.dll": "sha256-tpET+e3A\/DgSYvaijc5gaHhw5kQtrLY+gquX+3HlNdM=",
       "System.Threading.dll": "sha256-LBjfdpNqnhBtnJJQ2SDjdF1uGp628ivNJGYppcHvJK0=",
       "System.Threading.Thread.dll": "sha256-YmbWVY1kBFmhtZbu0II8D50POPAFNAS+6NtakdfOMn4=",
       "System.Transactions.Local.dll": "sha256-jyCm+W\/CRGOj+4fNlqHzEMZzsDkPunbdgfPASeLV6HA=",
-      "Webassembly.dll": "sha256-1Tsxv4Tc0KNacsBC4\/0cArGV9IEWdwLzpbHgAqgI8u8="
+      "Webassembly.dll": "sha256-5qpgQrKbQjYL1dmO0STNc24OoNu4Uhk2JWiZAb6FuF8="
     },
     "extensions": null,
     "lazyAssembly": null,

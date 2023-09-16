@@ -97,7 +97,7 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-nJkqNUT2kdI7JiGiJBej6CkheujJEXOYf3ZzbYcOoZg=",
+      "hash": "sha256-N4Cc803oMxTm4MZgPO++O1JopyDInmKpRvIsJ6V7rAY=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -381,7 +381,7 @@
       "url": "_framework\/System.Text.Encodings.Web.dll"
     },
     {
-      "hash": "sha256-qsHtQ8xuWLGIYYKi\/GjVapBIKLzHrXo\/73ZpC7BfVBM=",
+      "hash": "sha256-JOxbBcha3PdNHBIAjLc4tH+5mXcV5jwUdwE7dgJvCK8=",
       "url": "_framework\/System.Text.Json.dll"
     },
     {
@@ -401,7 +401,7 @@
       "url": "_framework\/System.Transactions.Local.dll"
     },
     {
-      "hash": "sha256-1Tsxv4Tc0KNacsBC4\/0cArGV9IEWdwLzpbHgAqgI8u8=",
+      "hash": "sha256-5qpgQrKbQjYL1dmO0STNc24OoNu4Uhk2JWiZAb6FuF8=",
       "url": "_framework\/Webassembly.dll"
     },
     {
@@ -429,5 +429,5 @@
       "url": "_content\/SqliteWasmHelper\/browserCache.js"
     }
   ],
-  "version": "5rEsqW3y"
+  "version": "N833Hj67"
 };
